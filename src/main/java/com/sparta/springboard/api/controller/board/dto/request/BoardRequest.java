@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardCreateRequest {
 
+    private String title;
     private String writer;
     private String content;
     private String password;
 
     public BoardCreateServiceRequest toServiceRequest() {
         return BoardCreateServiceRequest.builder()
+                .title(title)
                 .writer(writer)
                 .content(content)
                 .password(password)
