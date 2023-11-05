@@ -7,21 +7,21 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BoardCreateResponse {
+public class BoardResponse {
 
     private Long id;
     private String writer;
     private String content;
 
     @Builder
-    private BoardCreateResponse(Long id, String writer, String content) {
+    private BoardResponse(Long id, String writer, String content) {
         this.id = id;
         this.writer = writer;
         this.content = content;
     }
 
-    public static BoardCreateResponse of(BoardEntity board) {
-        return BoardCreateResponse.builder()
+    public static BoardResponse of(BoardEntity board) {
+        return BoardResponse.builder()
                 .id(board.getId())
                 .writer(board.getWriter())
                 .content(board.getContent())

@@ -1,7 +1,7 @@
 package com.sparta.springboard.api.service.board;
 
 import com.sparta.springboard.api.service.board.dto.request.BoardCreateServiceRequest;
-import com.sparta.springboard.api.service.board.dto.response.BoardCreateResponse;
+import com.sparta.springboard.api.service.board.dto.response.BoardResponse;
 import com.sparta.springboard.domain.board.BoardEntity;
 import com.sparta.springboard.domain.board.BoardRepository;
 import com.sparta.springboard.global.util.Encryption;
@@ -18,13 +18,20 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
-    public BoardCreateResponse createBoard(BoardCreateServiceRequest boardCreateServiceRequest) {
+    public BoardResponse createBoard(BoardCreateServiceRequest boardCreateServiceRequest) {
         BoardEntity board = BoardEntity.create(
                 boardCreateServiceRequest.getWriter(),
                 boardCreateServiceRequest.getContent(),
                 Encryption.encryption(boardCreateServiceRequest.getPassword()));
         BoardEntity saveBoard = boardRepository.save(board);
 
-        return BoardCreateResponse.of(saveBoard);
+        return BoardResponse.of(saveBoard);
+    }
+
+    public BoardResponse getBoard(Long id) {
+
+        return boardRepository.findById(id)
+                .map(BoardResponse::of)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
 }
