@@ -4,6 +4,7 @@ import com.sparta.springboard.api.ApiResponse;
 import com.sparta.springboard.api.controller.board.dto.request.BoardCreateRequest;
 import com.sparta.springboard.api.service.board.BoardService;
 import com.sparta.springboard.api.service.board.dto.response.BoardResponse;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,16 +24,22 @@ public class BoardController {
         this.boardService = boardService;
     }
 
+    @GetMapping("/board/{id}")
+    public ApiResponse<BoardResponse> getBoard(@PathVariable Long id) {
+
+        return ApiResponse.success(boardService.getBoard(id));
+    }
+
+    @GetMapping("/boards")
+    public ApiResponse<List<BoardResponse>> getBoards() {
+
+        return ApiResponse.success(boardService.getBoards());
+    }
+
     @PostMapping("/board/new")
     public ApiResponse<BoardResponse> createBoard(
             @RequestBody BoardCreateRequest boardCreateRequest) {
 
         return ApiResponse.success(boardService.createBoard(boardCreateRequest.toServiceRequest()));
-    }
-
-    @GetMapping("/board/{id}")
-    public ApiResponse<BoardResponse> getBoard(@PathVariable Long id) {
-
-        return ApiResponse.success(boardService.getBoard(id));
     }
 }
