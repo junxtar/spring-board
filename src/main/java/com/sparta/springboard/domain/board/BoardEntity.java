@@ -5,13 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardEntity extends BaseEntity {
 
     @Id
@@ -22,9 +23,17 @@ public class BoardEntity extends BaseEntity {
     private String password;
 
     @Builder
-    public BoardEntity (String writer, String content, String password) {
+    private BoardEntity(String writer, String content, String password) {
         this.writer = writer;
         this.content = content;
         this.password = password;
+    }
+
+    public static BoardEntity create(String writer, String content, String password) {
+        return BoardEntity.builder()
+                .writer(writer)
+                .content(content)
+                .password(password)
+                .build();
     }
 }
