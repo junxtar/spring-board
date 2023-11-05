@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BoardService {
@@ -42,18 +43,27 @@ public class BoardService {
         return BoardResponse.of(saveBoard);
     }
 
+    @Transactional
     public BoardResponse updateBoard(BoardServiceRequest boardServiceRequest, Long id) {
         String requestPassword = Encryption.encryption(boardServiceRequest.getPassword());
         BoardEntity board = existsBoard(id);
         if (board.getPassword().equals(requestPassword)) {
-            board.update(boardServiceRequest.getTitle(), boardServiceRequest.getWriter(), boardServiceRequest.getContent());
+            board.update(boardServiceRequest.getTitle(), boardServiceRequest.getWriter(),
+                    boardServiceRequest.getContent());
+
             return BoardResponse.of(board);
         }
 
         return null; // bad response ?
     }
 
+    public void deleteBoard(Long id) {
+        BoardEntity board = existsBoard(id);
+        boardRepository.delete(board);
+    }
+
     private BoardEntity existsBoard(Long id) {
-        return boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물 입니다."));
+        return boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물 입니다."));
     }
 }

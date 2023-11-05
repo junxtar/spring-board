@@ -6,6 +6,7 @@ import com.sparta.springboard.api.service.board.BoardService;
 import com.sparta.springboard.api.service.board.dto.response.BoardResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,5 +49,10 @@ public class BoardController {
     public ApiResponse<BoardResponse> updateBoard(@RequestBody BoardRequest boardRequest,
             @PathVariable Long id) {
         return ApiResponse.success(boardService.updateBoard(boardRequest.toServiceRequest(), id));
+    }
+
+    @DeleteMapping("/board/{id}")
+    public void deleteBoard(@PathVariable Long id) {
+        boardService.deleteBoard(id);
     }
 }
