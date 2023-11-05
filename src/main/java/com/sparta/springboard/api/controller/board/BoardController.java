@@ -1,5 +1,6 @@
 package com.sparta.springboard.api.controller.board;
 
+import com.sparta.springboard.api.ApiResponse;
 import com.sparta.springboard.api.controller.board.dto.request.BoardCreateRequest;
 import com.sparta.springboard.api.service.board.BoardService;
 import com.sparta.springboard.api.service.board.dto.response.BoardCreateResponse;
@@ -21,8 +22,9 @@ public class BoardController {
     }
 
     @PostMapping("/board/new")
-    public BoardCreateResponse createBoard(@RequestBody BoardCreateRequest boardCreateRequest) {
-        return boardService.createBoard(boardCreateRequest.toServiceRequest());
+    public ApiResponse<BoardCreateResponse> createBoard(
+            @RequestBody BoardCreateRequest boardCreateRequest) {
+        return ApiResponse.success(boardService.createBoard(boardCreateRequest.toServiceRequest()));
     }
 
 }
