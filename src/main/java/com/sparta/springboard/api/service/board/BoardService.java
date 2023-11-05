@@ -4,6 +4,7 @@ import com.sparta.springboard.api.service.board.dto.request.BoardCreateServiceRe
 import com.sparta.springboard.api.service.board.dto.response.BoardCreateResponse;
 import com.sparta.springboard.domain.board.BoardEntity;
 import com.sparta.springboard.domain.board.BoardRepository;
+import com.sparta.springboard.global.util.Encryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,7 @@ public class BoardService {
         BoardEntity board = BoardEntity.create(
                 boardCreateServiceRequest.getWriter(),
                 boardCreateServiceRequest.getContent(),
-                boardCreateServiceRequest.getPassword());
-
+                Encryption.encryption(boardCreateServiceRequest.getPassword()));
         BoardEntity saveBoard = boardRepository.save(board);
 
         return BoardCreateResponse.of(saveBoard);
