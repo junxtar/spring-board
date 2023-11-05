@@ -1,6 +1,6 @@
 package com.sparta.springboard.api.service.board;
 
-import com.sparta.springboard.api.service.board.dto.request.BoardCreateServiceRequest;
+import com.sparta.springboard.api.service.board.dto.request.BoardServiceRequest;
 import com.sparta.springboard.api.service.board.dto.response.BoardResponse;
 import com.sparta.springboard.domain.board.BoardEntity;
 import com.sparta.springboard.domain.board.BoardRepository;
@@ -21,24 +21,39 @@ public class BoardService {
     }
 
     public BoardResponse getBoard(Long id) {
-        return boardRepository.findById(id)
-                .map(BoardResponse::of)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        return BoardResponse.of(existsBoard(id));
     }
 
     public List<BoardResponse> getBoards() {
-        return boardRepository.findAll().stream()
+        return boardRepository.findAllByOrderByCreatedAtDesc().stream()
                 .map(BoardResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public BoardResponse createBoard(BoardCreateServiceRequest boardCreateServiceRequest) {
+    public BoardResponse createBoard(BoardServiceRequest boardServiceRequest) {
         BoardEntity board = BoardEntity.create(
-                boardCreateServiceRequest.getWriter(),
-                boardCreateServiceRequest.getContent(),
-                Encryption.encryption(boardCreateServiceRequest.getPassword()));
+                boardServiceRequest.getTitle(),
+                boardServiceRequest.getWriter(),
+                boardServiceRequest.getContent(),
+                Encryption.encryption(boardServiceRequest.getPassword()));
+
         BoardEntity saveBoard = boardRepository.save(board);
 
         return BoardResponse.of(saveBoard);
+    }
+
+    public BoardResponse updateBoard(BoardServiceRequest boardServiceRequest, Long id) {
+        String requestPassword = Encryption.encryption(boardServiceRequest.getPassword());
+        BoardEntity board = existsBoard(id);
+        if (board.getPassword().equals(requestPassword)) {
+            board.update(boardServiceRequest.getTitle(), boardServiceRequest.getWriter(), boardServiceRequest.getContent());
+            return BoardResponse.of(board);
+        }
+
+        return null; // bad response ?
+    }
+
+    private BoardEntity existsBoard(Long id) {
+        return boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물 입니다."));
     }
 }
