@@ -1,20 +1,20 @@
 package com.sparta.springboard.api.controller.board.dto.request;
 
-import com.sparta.springboard.api.service.board.dto.request.BoardCreateServiceRequest;
+import com.sparta.springboard.api.service.board.dto.request.BoardServiceRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BoardCreateRequest {
+public class BoardRequest {
 
     private String title;
     private String writer;
     private String content;
     private String password;
 
-    public BoardCreateServiceRequest toServiceRequest() {
-        return BoardCreateServiceRequest.builder()
+    public BoardServiceRequest toServiceRequest() {
+        return BoardServiceRequest.builder()
                 .title(title)
                 .writer(writer)
                 .content(content)

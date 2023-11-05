@@ -10,11 +10,13 @@ import lombok.NoArgsConstructor;
 public class BoardResponse {
 
     private Long id;
+    private String title;
     private String writer;
     private String content;
 
     @Builder
-    private BoardResponse(Long id, String writer, String content) {
+    private BoardResponse(Long id, String title, String writer, String content) {
+        this.title = title;
         this.id = id;
         this.writer = writer;
         this.content = content;
@@ -23,6 +25,7 @@ public class BoardResponse {
     public static BoardResponse of(BoardEntity board) {
         return BoardResponse.builder()
                 .id(board.getId())
+                .title(board.getTitle())
                 .writer(board.getWriter())
                 .content(board.getContent())
                 .build();
