@@ -5,6 +5,8 @@ import com.sparta.springboard.api.service.board.dto.request.BoardServiceRequest;
 import com.sparta.springboard.api.service.board.dto.response.BoardResponse;
 import com.sparta.springboard.domain.board.BoardEntity;
 import com.sparta.springboard.domain.board.BoardRepository;
+import com.sparta.springboard.exception.BoardException;
+import com.sparta.springboard.exception.ErrorCode;
 import com.sparta.springboard.global.util.Encryption;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +57,7 @@ public class BoardService {
             return BoardResponse.of(board);
         }
 
-        return null; // bad response ?
+        throw new BoardException(ErrorCode.PASSWORD_NOT_MATCH);
     }
 
     public void deleteBoard(BoardDeleteServiceRequest boardDeleteServiceRequest, Long id) {
@@ -64,10 +66,11 @@ public class BoardService {
         if (board.getPassword().equals(requestPassword)) {
             boardRepository.delete(board);
         }
+        throw new BoardException(ErrorCode.PASSWORD_NOT_MATCH);
     }
 
     private BoardEntity existsBoard(Long id) {
         return boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물 입니다."));
+                .orElseThrow(() -> new BoardException(ErrorCode.BOARD_NOT_FOUNT));
     }
 }
