@@ -1,6 +1,7 @@
 package com.sparta.springboard.api.controller.board;
 
 import com.sparta.springboard.api.ApiResponse;
+import com.sparta.springboard.api.controller.board.dto.request.BoardDeleteRequest;
 import com.sparta.springboard.api.controller.board.dto.request.BoardRequest;
 import com.sparta.springboard.api.service.board.BoardService;
 import com.sparta.springboard.api.service.board.dto.response.BoardResponse;
@@ -52,7 +53,7 @@ public class BoardController {
     }
 
     @DeleteMapping("/board/{id}")
-    public void deleteBoard(@PathVariable Long id) {
-        boardService.deleteBoard(id);
+    public void deleteBoard(@RequestBody BoardDeleteRequest boardDeleteRequest, @PathVariable Long id) {
+        boardService.deleteBoard(boardDeleteRequest.toServiceRequest(), id);
     }
 }

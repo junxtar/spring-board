@@ -1,5 +1,6 @@
 package com.sparta.springboard.api.service.board;
 
+import com.sparta.springboard.api.service.board.dto.request.BoardDeleteServiceRequest;
 import com.sparta.springboard.api.service.board.dto.request.BoardServiceRequest;
 import com.sparta.springboard.api.service.board.dto.response.BoardResponse;
 import com.sparta.springboard.domain.board.BoardEntity;
@@ -57,9 +58,12 @@ public class BoardService {
         return null; // bad response ?
     }
 
-    public void deleteBoard(Long id) {
+    public void deleteBoard(BoardDeleteServiceRequest boardDeleteServiceRequest, Long id) {
+        String requestPassword = Encryption.encryption(boardDeleteServiceRequest.getPassword());
         BoardEntity board = existsBoard(id);
-        boardRepository.delete(board);
+        if (board.getPassword().equals(requestPassword)) {
+            boardRepository.delete(board);
+        }
     }
 
     private BoardEntity existsBoard(Long id) {
