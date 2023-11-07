@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -34,6 +35,7 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public BoardResponse createBoard(BoardServiceRequest boardServiceRequest) {
         BoardEntity board = BoardEntity.create(
                 boardServiceRequest.getTitle(),
@@ -60,6 +62,7 @@ public class BoardService {
         throw new BoardException(ErrorCode.PASSWORD_NOT_MATCH);
     }
 
+    @Transactional
     public void deleteBoard(BoardDeleteServiceRequest boardDeleteServiceRequest, Long id) {
         String requestPassword = Encryption.encryption(boardDeleteServiceRequest.getPassword());
         BoardEntity board = existsBoard(id);
